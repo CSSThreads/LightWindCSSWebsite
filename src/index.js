@@ -65,6 +65,24 @@ window.addEventListener('load', () => {
         ========================================================================================== */ 
 
         let isFound = false;
+        for (let k = 0; k < lightWindCssConfig.proprieties.light.length; k++) {
+            if (isFound)
+                break;
+            if (classParams[classParams.length - 1].split('-')[0] == lightWindCssConfig.proprieties.light[k].name) {
+                let value = classParams[classParams.length - 1].split('-')[1]
+                for (let l = 2; l < classParams[classParams.length - 1].split('-').length; l++) {
+                    value += classParams[classParams.length - 1].split('-')[l]
+                }
+                value = value.substr(1, value.length - 2)
+
+                lightWindCssConfig.proprieties.light[k].proprieties.forEach(el => {
+                    styleStr += `${el}: ${value};`
+                })
+
+                isFound = true;
+            }
+        }
+
         for (let k = 0; k < lightWindCssConfig.proprieties.global.length; k++) {
             if (isFound)
                 break;
