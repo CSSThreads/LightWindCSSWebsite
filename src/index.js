@@ -16,7 +16,7 @@ window.addEventListener('load', () => {
     for (let i in LightJsClasses) {
         let classParams = LightJsClasses[i].split(':');
 
-        let styleStr = `\n`;
+        let styleStr = ``;
         let breakPointOpen = false;
 
         // getting the breakpoint
@@ -32,14 +32,14 @@ window.addEventListener('load', () => {
                     breakPointOpen = true;
                 }
                 else {
-                    styleStr += `@media screen and (min-width: ${lightWindCssConfig.breakpoints.screens[k].min}) and (max-width: ${lightWindCssConfig.breakpoints.screens[k].max}) { `;
+                    styleStr += `@media screen and (min-width: ${lightWindCssConfig.breakpoints.screens[k].min}) and (max-width: ${lightWindCssConfig.breakpoints.screens[k].max}) {`;
                     breakPointOpen = true;
                 }
                 break;
             }
         }
 
-        styleStr += LightJsClasses[i].replace(/\:/g, '\\:').replace(/\[/g, '\\[').replace(/\]/g, '\\]')
+        styleStr += `.${LightJsClasses[i].replace(/\:/g, '\\:').replace(/\[/g, '\\[').replace(/\]/g, '\\]')}`
 
         for (let j = 0; j < classParams.length - 1; j++) {
             // selectors
@@ -58,7 +58,7 @@ window.addEventListener('load', () => {
             }
         }
 
-        styleStr += " { "
+        styleStr += "{"
         
         /* ==========================================================================================
         Proprieties defining statred
@@ -70,7 +70,7 @@ window.addEventListener('load', () => {
                 break;
             if (lightWindCssConfig.proprieties.global[k]["value-only"]) {
                 if (lightWindCssConfig.proprieties.global[k].values.indexOf(classParams[classParams.length - 1].split('-')[0]) != -1) {
-                    styleStr += `${lightWindCssConfig.proprieties.global[k].propriety}:`
+                    styleStr += `${lightWindCssConfig.proprieties.global[k].propriety}: ${classParams[classParams.length - 1].split('-')[0]}`
                     isFound = true;
                 }
             }
@@ -102,12 +102,12 @@ window.addEventListener('load', () => {
         Proprieties defining ended
         ========================================================================================== */ 
 
-        styleStr += " }"
+        styleStr += ";}"
 
         if (breakPointOpen)
-            styleStr += ' }'
+            styleStr += '}'
 
-        console.log(styleStr)
+        styleLightWind.innerText += styleStr
     }
 
     // observing the DOM
