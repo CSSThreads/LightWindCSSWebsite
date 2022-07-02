@@ -1,0 +1,35 @@
+{
+    "default": {
+        "_comment": "({breakpoint}:{selector}:{selector}:{...}:){propriety}",
+        "breakpoints": {
+            "_comment": "Screen breakpoints",
+            "screens": [
+                { "name": "sm", "min" : null, "max" : "640px" },
+                { "name": "md", "min" : null, "max" : "768px" },
+                { "name": "lg", "min" : null, "max" : "1024px" },
+                { "name": "xl", "min" : null, "max" : "1280px" },
+                { "name": "2xl", "min" : null, "max" : "1536px" }
+            ]
+        },
+        "selectors": {
+            ":": [{ "name": "active", "selector": "active", "alias": ["act"] }, { "name": "checked", "selector": "checked", "alias": ["ckd"] }, { "name": "default", "selector": "default", "alias": ["dft"] }, 
+                  { "name": "disabled", "selector": "disabled", "alias": ["disebd"] }, { "name": "empty", "selector": "empty", "alias": [] }, { "name": "enabled", "selector": "enabled", "alias": ["ebd"] }, 
+                  { "name": "firstChild", "selector": "first-child", "alias": ["fstCld"] }, { "name": "firstOfType", "selector": "first-of-type", "alias": ["fstType"] }, { "name": "focus", "selector": "focus", "alias": ["fcs"] }, 
+                  { "name": "fullscreen", "selector": "fullscreen", "alias": ["fullscrn"] }, { "name": "hover", "selector": "hover", "alias": ["hvr"] }, { "name": "inRange", "selector": "in-range", "alias": ["inRng"] }, 
+                  { "name": "indeterminate", "selector": "indeterminate", "alias": ["indeter"] }, { "name": "invalid", "selector": "invalid", "alias": ["invld"] }, { "name": "lastChild", "selector": "last-child", "alias": ["lstCld"] }, 
+                  { "name": "lastOfType", "selector": "last-of-type", "alias": ["lstType"] }, { "name": "link", "selector": "link", "alias": [] }, { "name": "onlyOfType", "selector": "only-of-type", "alias": ["onlyType"] }, 
+                  { "name": "onlyChild", "selector": "only-child", "alias": ["onlyCld"] }, { "name": "optional", "selector": "optional", "alias": ["option"] }, { "name": "outOfRange", "selector": "out-of-range", "alias": ["oor"] }, 
+                  { "name": "readOnly", "selector": "read-only", "alias": ["rd"] }, { "name": "readWrite", "selector": "read-write", "alias": ["rdw"] }, { "name": "required", "selector": "required", "alias": ["req"] }, 
+                  { "name": "target", "selector": "target", "alias": ["trgt"] }, { "name": "valid", "selector": "valid", "alias": [] }, { "name": "visited", "selector": "visited", "alias": ["vsted"] }],
+            "::": [{ "name": "after", "selector": "after", "alias": ["aft"] }, { "name": "before", "selector": "before", "alias": ["bfr"] }, { "name": "firstLetter", "selector": "first-letter", "alias": ["fstLtr"] }, 
+                   { "name": "firstLine", "selector": "first-line", "alias": ["fstLn"] }, { "name": "marker", "selector": "marker", "alias": ["mkr"] }, { "name": "placeholder", "selector": "placeholder", "alias": ["plchld"] }, 
+                   { "name": "selection", "selector": "selection", "alias": ["slt"] }]
+        },
+        "proprieties": {
+            "global":   [{ "propriety": "position", "values": ["static", "fixed", "absolute", "relative", "sticky"], "editable": false, "value-only": true }, { "propriety": "top", "alias": ["t"], "editable": true, "value-only": false, "values": {"1": "1pt", "2": "1.75pt", "3": "2.5pt", "4": "3pt"} }, { "propriety": "bottom", "alias": ["b"], "editable": true, "value-only": false, "values": {"1": "1pt", "2": "1.75pt", "3": "2.5pt", "4": "3pt"} },
+                         { "propriety": "left", "alias": ["l"], "editable": true, "value-only": false, "values": {"1": "1pt", "2": "1.75pt", "3": "2.5pt", "4": "3pt"} }, { "propriety": "right", "alias": ["r"], "editable": true, "value-only": false, "values": {"1": "1pt", "2": "1.75pt", "3": "2.5pt", "4": "3pt"} }, { "propriety": "aspect", "alias": [], "editable": true, "value-only": false, "values": { "square": "1 / 1", "video": "16 / 9" } }],
+            "light":    [{ "name": "inset", "proprieties": ["top", "left", "bottom", "right"], "editable": true, "value-only": false, "values": {"1": "1pt", "2": "1.75pt", "3": "2.5pt", "4": "3pt"}}, { "name": "insetX", "proprieties": ["left", "right"], "editable": true, "value-only": false, "values": {"1": "1pt", "2": "1.75pt", "3": "2.5pt", "4": "3pt"}}, 
+                         { "name": "insetY", "proprieties": ["top", "bottom"], "editable": true, "value-only": false, "values": {"1": "1pt", "2": "1.75pt", "3": "2.5pt", "4": "3pt"}}]
+        }
+    }
+}
