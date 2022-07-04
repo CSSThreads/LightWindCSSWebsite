@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+
+    <!-- Link lightwindcss colors -->
+    <link rel="stylesheet" href="https://lightwindcss.github.io/Palette/src/colors.css">    
+
+    <script lightwindsrc="./lightTheme.json">  
+        "use strict";
+        // Init style tag where data = lightwindcss
+        let styleLightWind = document.createElement('style');
+        styleLightWind.setAttribute('data', 'lightwindcss');
+        styleLightWind.textContent = '.hidden{display:none;}.invisible{visibility:hidden;}'
+        document.head.appendChild(styleLightWind);
+
+        let req = new Request(document.querySelector('[lightwindsrc]').getAttribute('lightwindsrc'))
+        let resp = fetch(req)
+            .then(function(res) {
+                return res.json()
+            })
+            .then(function(res) {
+                return res
+            });
+
+        let config = {
+            'red': 'color: red;'
+        };
+
+        (() => {
+            new MutationObserver(function(mutations) {
+                mutations.forEach(mutation => {
+                    try {
+                        mutation.addedNodes.forEach(node => {
+                            if (typeof(node.classList) != 'undefined') {
+                                node.classList.forEach(elClass => {
+                                    
+                                })
+                            }
+                        })
+                    } catch {}
+                })
+            }).observe(document, { subtree: true, childList: true });
+
+            new MutationObserver(function(mutations) {
+                try {
+                    mutations.forEach(mutation => {
+                        mutation.target.classList.forEach(elClass => {
+                            console.log(`${elClass} appended`)
+                        })
+                    })
+                } catch {}
+            }).observe(document, { attributes: true, attributeFilter: ["class"], subtree: true });
+        })()
+    </script>
+</head>
+<body>
+    <div class="red">fds</div>
+    <div class="">fdsa</div>
+</body>
+</html>
