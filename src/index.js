@@ -43,7 +43,7 @@ for (let i in LightJsClasses) {
         }
     }
 
-    styleStr += `.${LightJsClasses[i].replace(/\:/g, '\\:').replace(/\[/g, '\\[').replace(/\]/g, '\\]').replace(/\>/g, '\\>').replace(/\//g, '\\/')}`
+    styleStr += `.${LightJsClasses[i].replace(/\:/g, '\\:').replace(/\[/g, '\\[').replace(/\]/g, '\\]').replace(/\>/g, '\\>').replace(/\//g, '\\/').replace(/\(/g, '\\(').replace(/\)/g, '\\)').replace(/\%/g, '\\%').replace(/\-/g, '\\-').replace(/\+/g, '\\+').replace(/\*/g, '\\*').replace(/\./g, '\\.')}`
 
     for (let j = 0; j < classParams.length - 1; j++) {
         // selectors
@@ -70,7 +70,9 @@ for (let i in LightJsClasses) {
             break;
         if (classParams[classParams.length - 1].split('>')[0] == lightWindCssConfig.proprieties.light[k].name) {
             let value = classParams[classParams.length - 1].split('>')[1]
-            value = value.substr(1, value.length - 2)
+            if (value.indexOf('calc(') != -1) {
+                value = value.replace(/\-/g, ' - ').replace(/\+/g, ' + ').replace(/\//g, ' / ').replace(/\*/g, ' * ')
+            }
 
             for (let l in lightWindCssConfig.proprieties.light[k].values) {
                 if (lightWindCssConfig.proprieties.light[k].values[l].name == value)
@@ -103,7 +105,9 @@ for (let i in LightJsClasses) {
             try {
                 if (classParams[classParams.length - 1].split('>')[0] == lightWindCssConfig.proprieties.global[k].propriety || lightWindCssConfig.proprieties.global[k].alias.indexOf(classParams[classParams.length - 1].split('>')[0]) != -1) {
                     let value = classParams[classParams.length - 1].split('>')[1]
-                    value = value.substr(1, value.length - 2)
+                    if (value.indexOf('calc(') != -1) {
+                        value = value.replace(/\-/g, ' - ').replace(/\+/g, ' + ').replace(/\//g, ' / ').replace(/\*/g, ' * ')
+                    }
 
                     for (let l in lightWindCssConfig.proprieties.global[k].values) {
                         if (lightWindCssConfig.proprieties.global[k].values[l].name == value)
@@ -123,7 +127,9 @@ for (let i in LightJsClasses) {
 
     if (!isFound) {
         let value = classParams[classParams.length - 1].split('>')[1]
-        value = value.substr(1, value.length - 2)
+        if (value.indexOf('calc(') != -1) {
+            value = value.replace(/\-/g, ' - ').replace(/\+/g, ' + ').replace(/\//g, ' / ').replace(/\*/g, ' * ')
+        }
 
         if (value.startsWith('--')) {
             value = `var(${value})`
@@ -198,7 +204,7 @@ async function classEvaluate(el, classes = null) {
             }
         }
 
-        styleStr += `.${el.replace(/\:/g, '\\:').replace(/\[/g, '\\[').replace(/\]/g, '\\]').replace(/\>/g, '\\>').replace(/\//g, '\\/')}`
+        styleStr += `.${el.replace(/\:/g, '\\:').replace(/\[/g, '\\[').replace(/\]/g, '\\]').replace(/\>/g, '\\>').replace(/\//g, '\\/').replace(/\(/g, '\\(').replace(/\)/g, '\\)').replace(/\%/g, '\\%').replace(/\-/g, '\\-').replace(/\+/g, '\\+').replace(/\*/g, '\\*').replace(/\./g, '\\.')}`
 
         for (let j = 0; j < classParams.length - 1; j++) {
             // selectors
@@ -225,7 +231,9 @@ async function classEvaluate(el, classes = null) {
                 break;
             if (classParams[classParams.length - 1].split('>')[0] == lightWindCssConfig.proprieties.light[k].name) {
                 let value = classParams[classParams.length - 1].split('>')[1]
-                value = value.substr(1, value.length - 2)
+                if (value.indexOf('calc(') != -1) {
+                    value = value.replace(/\-/g, ' - ').replace(/\+/g, ' + ').replace(/\//g, ' / ').replace(/\*/g, ' * ')
+                }
 
                 for (let l in lightWindCssConfig.proprieties.light[k].values) {
                     if (lightWindCssConfig.proprieties.light[k].values[l].name == value)
@@ -258,7 +266,9 @@ async function classEvaluate(el, classes = null) {
                 try {
                     if (classParams[classParams.length - 1].split('>')[0] == lightWindCssConfig.proprieties.global[k].propriety || lightWindCssConfig.proprieties.global[k].alias.indexOf(classParams[classParams.length - 1].split('>')[0]) != -1) {
                         let value = classParams[classParams.length - 1].split('>')[1]
-                        value = value.substr(1, value.length - 2)
+                        if (value.indexOf('calc(') != -1) {
+                            value = value.replace(/\-/g, ' - ').replace(/\+/g, ' + ').replace(/\//g, ' / ').replace(/\*/g, ' * ')
+                        }
     
                         for (let l in lightWindCssConfig.proprieties.global[k].values) {
                             if (lightWindCssConfig.proprieties.global[k].values[l].name == value)
@@ -278,7 +288,9 @@ async function classEvaluate(el, classes = null) {
 
         if (!isFound) {
             let value = classParams[classParams.length - 1].split('>')[1]
-            value = value.substr(1, value.length - 2)
+            if (value.indexOf('calc(') != -1) {
+                value = value.replace(/\-/g, ' - ').replace(/\+/g, ' + ').replace(/\//g, ' / ').replace(/\*/g, ' * ')
+            }
 
             if (value.startsWith('--')) {
                 value = `var(${value})`
