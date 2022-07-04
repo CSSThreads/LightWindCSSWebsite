@@ -7,6 +7,7 @@ window.addEventListener('load', () => {
     // Init style tag where data = lightwindcss
     let styleLightWind = document.createElement('style');
     styleLightWind.setAttribute('data', 'lightwindcss');
+    styleLightWind.textContent = '.hidden{display:none;}.invisible{visibility:hidden;}'
     document.head.appendChild(styleLightWind);
 
     // Getting all classes
