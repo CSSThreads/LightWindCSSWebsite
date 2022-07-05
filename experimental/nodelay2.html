@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+
+    <script lightwindsrc="./lightTheme.json">
+        {
+            "use strict";
+
+            // Init style tag where data = lightwindcss
+            let styleLightWind = document.createElement('style');
+            styleLightWind.setAttribute('data', 'lightwindcss');
+            styleLightWind.textContent = '.hidden{display:none;}.invisible{visibility:hidden;}'
+            document.head.appendChild(styleLightWind);
+
+            let requestTheme = new Request(document.querySelector('[lightwindsrc]').getAttribute('lightwindsrc'));
+
+            fetch(requestTheme)
+                .then(function (res) {
+                    console.log(res)
+                })
+
+            function searchFor(path, obj) {
+                return new Promise((resolve) => {
+                    setTimeout(() => {
+                        resolve(true);
+                    }, 0);
+                });
+            }
+
+            // To call
+            async function resolveClass(classToResolve) {
+                const result = await searchFor(path, obj);
+            }
+        }
+    </script>
+</head>
+<body>
+</body>
+</html>
