@@ -16,14 +16,26 @@
             styleLightWind.textContent = '.hidden{display:none;}.invisible{visibility:hidden;}'
             document.head.appendChild(styleLightWind);
 
+            function getIndex(arr, val) {
+                for (let i in arr) {
+                    if (val == arr[i]) {
+                        return i;
+                    }
+                }
+                return -1;
+            }
+
             async function getTheme() {
                 let requestTheme = new Request(document.querySelector('[lightwindsrc]').getAttribute('lightwindsrc'));
                 let response = await fetch(requestTheme);
                 return await response.json();
             }
 
-            async function searchInPath(list, classToResolve, val) {
-                return await searchAwait(list, classToResolve, val)
+            async function searchInPath(type, classToResolve, val) {
+                if (type == 'prop') {
+                    let light = await searchAwait('light', classToResolve, val)
+                    let global = await searchAwait('global', classToResolve, val)
+                }
             }
             function searchAwait(list, classToResolve, val) {
                 return new Promise((resolve) => {
@@ -31,19 +43,10 @@
                         switch(list) {
                             case 'global':
                                 theme.default.proprieties.global.forEach(el => {
-                                    if (typeof(val) == 'undefined' && el["value-only"]) {
-                                        // only value
-                                        el.values.forEach(value => {
-                                            if (value == classToResolve) {
-                                                resolve(`${el.propriety}:${value};`)
-                                            }
-                                        })
-                                    }
-                                    else if (typeof(val) != 'undefined') {
-                                        // with alias
-
-                                    }
+                                    
                                 })
+                                break;
+                            case 'light':
                                 break;
                         }
                     })
@@ -55,15 +58,9 @@
                     if (maxlen == index) {
                         // only value
                         let name = obj.split('>')[0], value = obj.split('>')[1]
-                        let globalVal = searchInPath('global', name, value)
-                        let lightVal = searchInPath('light', name, value)
 
-                        if (globalVal == '')
-                            resolve(lightVal)
-                        else if (globalVal != '')
-                            resolve(globalVal)
-                        else 
-                            resolve(`${name}: ${value};`)
+                        searchInPath('prop', name, value).then(function(res) {
+                        })
                     }
                     else if (index == 0) {
                         // screen
@@ -78,11 +75,9 @@
             // To call
             async function resolveClass(classToResolve) {
                 let subClassElements = classToResolve.split(':'), styleStr = '', breakPointOpen = false;
-
                 for (i in subClassElements) {
-                    styleStr += await searchFor(breakPointOpen, (subClassElements.length - 1)/* max index */, subClassElements[i] /* the class sub element */, i /* index */)
+                    styleStr += await searchFor(breakPointOpen, (subClassElements.length - 1)/* max index */, subClassElements[i] /* the class sub element */, i /* index */)                                        
                 }
-
                 console.log(styleStr)
             }
 
@@ -117,11 +112,11 @@
 </head>
 <body>
     <div class="lol">
-        <a href="#" class="ll>ss">
-            <ul class="s:fds:dfs>ss">
+        <a href="#" class="dgfd:ll>ss">
+            <ul class="left>10">
                 <li class="absolute"></li>
-                <li class="gg"></li>
-                <li class="gg"></li>
+                <li class="l>1"></li>
+                <li class="opacity>0"></li>
                 <li class="gg"></li>
                 <li class="gg"></li>
             </ul>
