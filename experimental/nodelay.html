@@ -6,59 +6,126 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
 
-    <!-- Link lightwindcss colors -->
-    <link rel="stylesheet" href="https://lightwindcss.github.io/Palette/src/colors.css">    
+    <script lightwindsrc="./lightTheme.json">
+        {
+            "use strict";
 
-    <script lightwindsrc="./lightTheme.json">  
-        "use strict";
-        // Init style tag where data = lightwindcss
-        let styleLightWind = document.createElement('style');
-        styleLightWind.setAttribute('data', 'lightwindcss');
-        styleLightWind.textContent = '.hidden{display:none;}.invisible{visibility:hidden;}'
-        document.head.appendChild(styleLightWind);
+            // Init style tag where data = lightwindcss
+            let styleLightWind = document.createElement('style');
+            styleLightWind.setAttribute('data', 'lightwindcss');
+            styleLightWind.textContent = '.hidden{display:none;}.invisible{visibility:hidden;}'
+            document.head.appendChild(styleLightWind);
 
-        let req = new Request(document.querySelector('[lightwindsrc]').getAttribute('lightwindsrc'))
-        let resp = fetch(req)
-            .then(function(res) {
-                return res.json()
-            })
-            .then(function(res) {
-                return res
-            });
+            async function getTheme() {
+                let requestTheme = new Request(document.querySelector('[lightwindsrc]').getAttribute('lightwindsrc'));
+                let response = await fetch(requestTheme);
+                return await response.json();
+            }
 
-        let config = {
-            'red': 'color: red;'
-        };
+            async function searchInPath(list, classToResolve, val) {
+                return await searchAwait(list, classToResolve, val)
+            }
+            function searchAwait(list, classToResolve, val) {
+                return new Promise((resolve) => {
+                    getTheme().then(theme => {
+                        switch(list) {
+                            case 'global':
+                                theme.default.proprieties.global.forEach(el => {
+                                    if (typeof(val) == 'undefined' && el["value-only"]) {
+                                        // only value
+                                        el.values.forEach(value => {
+                                            if (value == classToResolve) {
+                                                resolve(`${el.propriety}:${value};`)
+                                            }
+                                        })
+                                    }
+                                    else if (typeof(val) != 'undefined') {
+                                        // with alias
 
-        (() => {
-            new MutationObserver(function(mutations) {
-                mutations.forEach(mutation => {
-                    try {
-                        mutation.addedNodes.forEach(node => {
-                            if (typeof(node.classList) != 'undefined') {
-                                node.classList.forEach(elClass => {
-                                    
+                                    }
                                 })
-                            }
+                                break;
+                        }
+                    })
+                });
+            }
+
+            function searchFor(breakptnopen, maxlen, obj, index) {
+                return new Promise((resolve) => {
+                    if (maxlen == index) {
+                        // only value
+                        let name = obj.split('>')[0], value = obj.split('>')[1]
+                        let globalVal = searchInPath('global', name, value)
+                        let lightVal = searchInPath('light', name, value)
+
+                        if (globalVal == '')
+                            resolve(lightVal)
+                        else if (globalVal != '')
+                            resolve(globalVal)
+                        else 
+                            resolve(`${name}: ${value};`)
+                    }
+                    else if (index == 0) {
+                        // screen
+                        
+                        // selector
+                    }
+                    else {
+                        // selector
+                    }
+                });
+            }
+            // To call
+            async function resolveClass(classToResolve) {
+                let subClassElements = classToResolve.split(':'), styleStr = '', breakPointOpen = false;
+
+                for (i in subClassElements) {
+                    styleStr += await searchFor(breakPointOpen, (subClassElements.length - 1)/* max index */, subClassElements[i] /* the class sub element */, i /* index */)
+                }
+
+                console.log(styleStr)
+            }
+
+            // mutations
+            (() => {
+                new MutationObserver(function(mutations) {
+                    mutations.forEach(mutation => {
+                        try {
+                            mutation.addedNodes.forEach(node => {
+                                if (typeof(node.classList) != 'undefined') {
+                                    node.classList.forEach(elClass => {
+                                        resolveClass(elClass)
+                                    })
+                                }
+                            })
+                        } catch {}
+                    })
+                }).observe(document, { subtree: true, childList: true });
+
+                new MutationObserver(function(mutations) {
+                    try {
+                        mutations.forEach(mutation => {
+                            mutation.target.classList.forEach(elClass => {
+                                resolveClass(elClass)
+                            })
                         })
                     } catch {}
-                })
-            }).observe(document, { subtree: true, childList: true });
-
-            new MutationObserver(function(mutations) {
-                try {
-                    mutations.forEach(mutation => {
-                        mutation.target.classList.forEach(elClass => {
-                            console.log(`${elClass} appended`)
-                        })
-                    })
-                } catch {}
-            }).observe(document, { attributes: true, attributeFilter: ["class"], subtree: true });
-        })()
+                }).observe(document, { attributes: true, attributeFilter: ["class"], subtree: true });
+            })()
+        }
     </script>
 </head>
 <body>
-    <div class="red">fds</div>
-    <div class="">fdsa</div>
+    <div class="lol">
+        <a href="#" class="ll>ss">
+            <ul class="s:fds:dfs>ss">
+                <li class="absolute"></li>
+                <li class="gg"></li>
+                <li class="gg"></li>
+                <li class="gg"></li>
+                <li class="gg"></li>
+            </ul>
+        </a>
+    </div>
 </body>
 </html>
