@@ -16,69 +16,29 @@
             styleLightWind.textContent = '.hidden{display:none;}.invisible{visibility:hidden;}'
             document.head.appendChild(styleLightWind);
 
-            function getIndex(arr, val) {
-                for (let i in arr) {
-                    if (val == arr[i]) {
-                        return i;
-                    }
-                }
-                return -1;
-            }
+            let allClasses = [];
 
-            async function getTheme() {
-                let requestTheme = new Request(document.querySelector('[lightwindsrc]').getAttribute('lightwindsrc'));
-                let response = await fetch(requestTheme);
-                return await response.json();
-            }
-
-            async function searchInPath(type, classToResolve, val) {
-                if (type == 'prop') {
-                    let light = await searchAwait('light', classToResolve, val)
-                    let global = await searchAwait('global', classToResolve, val)
-                }
-            }
-            function searchAwait(list, classToResolve, val) {
-                return new Promise((resolve) => {
-                    getTheme().then(theme => {
-                        switch(list) {
-                            case 'global':
-                                theme.default.proprieties.global.forEach(el => {
-                                    
-                                })
-                                break;
-                            case 'light':
-                                break;
-                        }
+            (() => {
+                fetch(document.querySelector('[lightwindsrc]').getAttribute('lightwindsrc'))
+                    .then(async function(res) {
+                        res = await res.json();
+                        console.log(res)
                     })
-                });
-            }
+            })();
 
-            function searchFor(breakptnopen, maxlen, obj, index) {
-                return new Promise((resolve) => {
-                    if (maxlen == index) {
-                        // only value
-                        let name = obj.split('>')[0], value = obj.split('>')[1]
-
-                        searchInPath('prop', name, value).then(function(res) {
-                        })
+            async function resolveClass(className) {
+                let classSubParams = className.split(':'), styleSre = ''
+                for (i in classSubParams) {
+                    if (i == 0) {
+                        // screen + selector 
                     }
-                    else if (index == 0) {
-                        // screen
-                        
-                        // selector
+                    else if (i == classSubParams.length - 1) {
+                        // value
                     }
                     else {
                         // selector
                     }
-                });
-            }
-            // To call
-            async function resolveClass(classToResolve) {
-                let subClassElements = classToResolve.split(':'), styleStr = '', breakPointOpen = false;
-                for (i in subClassElements) {
-                    styleStr += await searchFor(breakPointOpen, (subClassElements.length - 1)/* max index */, subClassElements[i] /* the class sub element */, i /* index */)                                        
                 }
-                console.log(styleStr)
             }
 
             // mutations
@@ -89,7 +49,10 @@
                             mutation.addedNodes.forEach(node => {
                                 if (typeof(node.classList) != 'undefined') {
                                     node.classList.forEach(elClass => {
-                                        resolveClass(elClass)
+                                        if (allClasses.indexOf(elClass) == -1) {
+                                            resolveClass(elClass)
+                                            allClasses.push(elClass)
+                                        }
                                     })
                                 }
                             })
@@ -101,7 +64,10 @@
                     try {
                         mutations.forEach(mutation => {
                             mutation.target.classList.forEach(elClass => {
-                                resolveClass(elClass)
+                                if (allClasses.indexOf(elClass) == -1) {
+                                    resolveClass(elClass)
+                                    allClasses.push(elClass)
+                                }
                             })
                         })
                     } catch {}
