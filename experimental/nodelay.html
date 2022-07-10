@@ -18,25 +18,49 @@
 
             let allClasses = [];
 
-            (() => {
-                fetch(document.querySelector('[lightwindsrc]').getAttribute('lightwindsrc'))
-                    .then(async function(res) {
-                        res = await res.json();
-                        console.log(res)
-                    })
-            })();
-
             async function resolveClass(className) {
-                let classSubParams = className.split(':'), styleSre = ''
+                let classSubParams = className.split(':'), styleStr = '', screenBreakPointOpen = false
                 for (i in classSubParams) {
-                    if (i == 0) {
-                        // screen + selector 
+                    if (i == 0 && classSubParams.length > 1) {
+                        // screen async search 
+
+                        let resp = async function(classSubParams, styleStr, screenBreakPointOpen, i) {
+                            let res = await fetch(document.querySelector('[lightwindsrc]').getAttribute('lightwindsrc')), strRet = ''
+                            res = await res.json()
+                            res.default.breakpoints.screens.forEach(async (screen) => {
+                                console.log(`${screen.name} : ${classSubParams[i]}`)
+                                if (screen.name == classSubParams[i]) {
+                                    screenBreakPointOpen = true;
+                                    if (screen.min != null && screen.max != null) {
+                                        strRet = `@media screen and (min-width: ${screen.min}) and (max-width: ${screen.max}) {`
+                                    }
+                                    else if (screen.min != null) {
+                                        strRet = `@media screen and (min-width: ${screen.min}) {`
+                                    }
+                                    else if (screen.max != null) {
+                                        strRet = `@media screen and (max-width: ${screen.max}) {`
+                                    }
+                                }
+                            })
+                            return strRet
+                        }(classSubParams, styleStr, screenBreakPointOpen, i);
+
+                        console.log(await resp)
+
+                        // selector async search (name + alias on async search)
+
                     }
                     else if (i == classSubParams.length - 1) {
-                        // value
+                        // value + name getting
+                        let value = classSubParams[i].split('>')[1], name = classSubParams[i].split('>')[0];
+
+                        // only value async search
+
+                        // each name + alias on async search
+
                     }
                     else {
-                        // selector
+                        // selector (name + alias on async search)
                     }
                 }
             }
@@ -77,8 +101,8 @@
     </script>
 </head>
 <body>
-    <div class="lol">
-        <a href="#" class="dgfd:ll>ss">
+    <div class="sm:lol">
+        <a href="#" class="md:dgfd:ll>ss">
             <ul class="left>10">
                 <li class="absolute"></li>
                 <li class="l>1"></li>
