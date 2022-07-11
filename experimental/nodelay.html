@@ -24,31 +24,42 @@
                     if (i == 0 && classSubParams.length > 1) {
                         // screen async search 
 
-                        let resp = async function(classSubParams, styleStr, screenBreakPointOpen, i) {
+                        let resp = async function(classSubParams, screenBreakPointOpen, i, className) {
                             let res = await fetch(document.querySelector('[lightwindsrc]').getAttribute('lightwindsrc')), strRet = ''
                             res = await res.json()
                             res.default.breakpoints.screens.forEach(async (screen) => {
-                                console.log(`${screen.name} : ${classSubParams[i]}`)
                                 if (screen.name == classSubParams[i]) {
                                     screenBreakPointOpen = true;
                                     if (screen.min != null && screen.max != null) {
-                                        strRet = `@media screen and (min-width: ${screen.min}) and (max-width: ${screen.max}) {`
+                                        strRet = `@media screen and (min-width: ${screen.min}) and (max-width: ${screen.max}) { .${className.replace(/\:/g, '\\:').replace(/\[/g, '\\[').replace(/\]/g, '\\]').replace(/\>/g, '\\>').replace(/\//g, '\\/').replace(/\(/g, '\\(').replace(/\)/g, '\\)').replace(/\%/g, '\\%').replace(/\-/g, '\\-').replace(/\+/g, '\\+').replace(/\*/g, '\\*').replace(/\,/g, '\\,').replace(/\|/g, '\\|')}`
                                     }
                                     else if (screen.min != null) {
-                                        strRet = `@media screen and (min-width: ${screen.min}) {`
+                                        strRet = `@media screen and (min-width: ${screen.min}) { .${className.replace(/\:/g, '\\:').replace(/\[/g, '\\[').replace(/\]/g, '\\]').replace(/\>/g, '\\>').replace(/\//g, '\\/').replace(/\(/g, '\\(').replace(/\)/g, '\\)').replace(/\%/g, '\\%').replace(/\-/g, '\\-').replace(/\+/g, '\\+').replace(/\*/g, '\\*').replace(/\,/g, '\\,').replace(/\|/g, '\\|')}`
                                     }
                                     else if (screen.max != null) {
-                                        strRet = `@media screen and (max-width: ${screen.max}) {`
+                                        strRet = `@media screen and (max-width: ${screen.max}) { .${className.replace(/\:/g, '\\:').replace(/\[/g, '\\[').replace(/\]/g, '\\]').replace(/\>/g, '\\>').replace(/\//g, '\\/').replace(/\(/g, '\\(').replace(/\)/g, '\\)').replace(/\%/g, '\\%').replace(/\-/g, '\\-').replace(/\+/g, '\\+').replace(/\*/g, '\\*').replace(/\,/g, '\\,').replace(/\|/g, '\\|')}`
                                     }
                                 }
                             })
                             return strRet
-                        }(classSubParams, styleStr, screenBreakPointOpen, i);
-
-                        console.log(await resp)
+                        }(classSubParams, screenBreakPointOpen, i, className);
+                        styleStr += await resp
 
                         // selector async search (name + alias on async search)
-
+                        resp = async function(classSubParams, i) {
+                            let res = await fetch(document.querySelector('[lightwindsrc]').getAttribute('lightwindsrc')), strRet = ''
+                            res = await res.json()
+                            res.default.selectors[':'].forEach(async (sel) => {
+                                if (sel.name == classSubParams[i] || sel.alias.indexOf(classSubParams[i]) != -1)
+                                    strRet = `.${className.replace(/\:/g, '\\:').replace(/\[/g, '\\[').replace(/\]/g, '\\]').replace(/\>/g, '\\>').replace(/\//g, '\\/').replace(/\(/g, '\\(').replace(/\)/g, '\\)').replace(/\%/g, '\\%').replace(/\-/g, '\\-').replace(/\+/g, '\\+').replace(/\*/g, '\\*').replace(/\,/g, '\\,').replace(/\|/g, '\\|')}:${sel.selector}`
+                            })
+                            res.default.selectors['::'].forEach(async (sel) => {
+                                if (sel.name == classSubParams[i] || sel.alias.indexOf(classSubParams[i]) != -1)
+                                    strRet = `.${className.replace(/\:/g, '\\:').replace(/\[/g, '\\[').replace(/\]/g, '\\]').replace(/\>/g, '\\>').replace(/\//g, '\\/').replace(/\(/g, '\\(').replace(/\)/g, '\\)').replace(/\%/g, '\\%').replace(/\-/g, '\\-').replace(/\+/g, '\\+').replace(/\*/g, '\\*').replace(/\,/g, '\\,').replace(/\|/g, '\\|')}::${sel.selector}`
+                            })
+                            return strRet
+                        }(classSubParams, i);
+                        styleStr += await resp
                     }
                     else if (i == classSubParams.length - 1) {
                         // value + name getting
@@ -61,8 +72,23 @@
                     }
                     else {
                         // selector (name + alias on async search)
+                        let resp = async function(classSubParams, i) {
+                            let res = await fetch(document.querySelector('[lightwindsrc]').getAttribute('lightwindsrc')), strRet = ''
+                            res = await res.json()
+                            res.default.selectors[':'].forEach(async (sel) => {
+                                if (sel.name == classSubParams[i] || sel.alias.indexOf(classSubParams[i]) != -1)
+                                    strRet = `:${sel.selector}`
+                            })
+                            res.default.selectors['::'].forEach(async (sel) => {
+                                if (sel.name == classSubParams[i] || sel.alias.indexOf(classSubParams[i]) != -1)
+                                    strRet = `::${sel.selector}`
+                            })
+                            return strRet
+                        }(classSubParams, i);
+                        styleStr += await resp
                     }
                 }
+                styleLightWind.textContent += styleStr
             }
 
             // mutations
@@ -102,7 +128,7 @@
 </head>
 <body>
     <div class="sm:lol">
-        <a href="#" class="md:dgfd:ll>ss">
+        <a href="#" class="md:bfr:ll>ss">
             <ul class="left>10">
                 <li class="absolute"></li>
                 <li class="l>1"></li>
