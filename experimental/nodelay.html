@@ -19,9 +19,23 @@
             let allClasses = [];
 
             async function resolveClass(className) {
+                let date = new Date();
+                let lasttime = date.getTime()
                 let classSubParams = className.split(':'), styleStr = '', screenBreakPointOpen = false
                 for (i in classSubParams) {
-                    if (i == 0 && classSubParams.length > 1) {
+                    if (i == classSubParams.length - 1) {
+                        // value + name getting
+                        let value = classSubParams[i].split('>')[1], name = classSubParams[i].split('>')[0], resp = '';
+                        let res = await fetch(document.querySelector('[lightwindsrc]').getAttribute('lightwindsrc')), strRet = ''
+                        res = await res.json()
+                        if (resp == '') {
+                            resp = `{${name}:${value};}`        
+                        }
+                        styleStr = styleStr + `.${className.replace(/\:/g, '\\:').replace(/\[/g, '\\[').replace(/\]/g, '\\]').replace(/\>/g, '\\>').replace(/\//g, '\\/').replace(/\(/g, '\\(').replace(/\)/g, '\\)').replace(/\%/g, '\\%').replace(/\-/g, '\\-').replace(/\+/g, '\\+').replace(/\*/g, '\\*').replace(/\,/g, '\\,').replace(/\|/g, '\\|')}` + resp
+                        if (screenBreakPointOpen)
+                            styleStr += '}'
+                    }
+                    else if (i == 0) {
                         // screen async search 
 
                         let resp = async function(classSubParams, screenBreakPointOpen, i, className) {
@@ -31,13 +45,13 @@
                                 if (screen.name == classSubParams[i]) {
                                     screenBreakPointOpen = true;
                                     if (screen.min != null && screen.max != null) {
-                                        strRet = `@media screen and (min-width: ${screen.min}) and (max-width: ${screen.max}) { .${className.replace(/\:/g, '\\:').replace(/\[/g, '\\[').replace(/\]/g, '\\]').replace(/\>/g, '\\>').replace(/\//g, '\\/').replace(/\(/g, '\\(').replace(/\)/g, '\\)').replace(/\%/g, '\\%').replace(/\-/g, '\\-').replace(/\+/g, '\\+').replace(/\*/g, '\\*').replace(/\,/g, '\\,').replace(/\|/g, '\\|')}`
+                                        strRet = `@media screen and (min-width: ${screen.min}) and (max-width: ${screen.max}){`
                                     }
                                     else if (screen.min != null) {
-                                        strRet = `@media screen and (min-width: ${screen.min}) { .${className.replace(/\:/g, '\\:').replace(/\[/g, '\\[').replace(/\]/g, '\\]').replace(/\>/g, '\\>').replace(/\//g, '\\/').replace(/\(/g, '\\(').replace(/\)/g, '\\)').replace(/\%/g, '\\%').replace(/\-/g, '\\-').replace(/\+/g, '\\+').replace(/\*/g, '\\*').replace(/\,/g, '\\,').replace(/\|/g, '\\|')}`
+                                        strRet = `@media screen and (min-width: ${screen.min}){`
                                     }
                                     else if (screen.max != null) {
-                                        strRet = `@media screen and (max-width: ${screen.max}) { .${className.replace(/\:/g, '\\:').replace(/\[/g, '\\[').replace(/\]/g, '\\]').replace(/\>/g, '\\>').replace(/\//g, '\\/').replace(/\(/g, '\\(').replace(/\)/g, '\\)').replace(/\%/g, '\\%').replace(/\-/g, '\\-').replace(/\+/g, '\\+').replace(/\*/g, '\\*').replace(/\,/g, '\\,').replace(/\|/g, '\\|')}`
+                                        strRet = `@media screen and (max-width: ${screen.max}){`
                                     }
                                 }
                             })
@@ -61,15 +75,6 @@
                         }(classSubParams, i);
                         styleStr += await resp
                     }
-                    else if (i == classSubParams.length - 1) {
-                        // value + name getting
-                        let value = classSubParams[i].split('>')[1], name = classSubParams[i].split('>')[0];
-
-                        // only value async search
-
-                        // each name + alias on async search
-
-                    }
                     else {
                         // selector (name + alias on async search)
                         let resp = async function(classSubParams, i) {
@@ -89,10 +94,11 @@
                     }
                 }
                 styleLightWind.textContent += styleStr
+                console.log(date.getTime() - lasttime)
             }
 
             // mutations
-            (() => {
+            (async () => {
                 new MutationObserver(function(mutations) {
                     mutations.forEach(mutation => {
                         try {
@@ -127,16 +133,8 @@
     </script>
 </head>
 <body>
-    <div class="sm:lol">
-        <a href="#" class="md:bfr:ll>ss">
-            <ul class="left>10">
-                <li class="absolute"></li>
-                <li class="l>1"></li>
-                <li class="opacity>0"></li>
-                <li class="gg"></li>
-                <li class="gg"></li>
-            </ul>
-        </a>
+    <div class="md:color>red top>100px position>absolute">
+        jj
     </div>
 </body>
 </html>
