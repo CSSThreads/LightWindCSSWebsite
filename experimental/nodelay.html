@@ -14,32 +14,27 @@
             styleLightWind.textContent = '.hidden{display:none;}.invisible{visibility:hidden;}'
             document.head.appendChild(styleLightWind);
 
-            let res;
-
-            (async (res) => {
-                res = await fetch(document.querySelector('[lightwindsrc]').getAttribute('lightwindsrc'))
-                res = await res.json()
-            })(res)
-
             let allClasses = [];
 
             async function resolveClass(className, res) {
                 let classSubParams = className.split(':'), screenBreakPointOpen = false;
-                
+
                 for (i in classSubParams) {
                     if (i == classSubParams.length - 1) {
+                        if (i == 0) 
+                            styleLightWind.textContent += `.${className.replace(/\:/g, '\\:').replace(/\[/g, '\\[').replace(/\]/g, '\\]').replace(/\>/g, '\\>').replace(/\//g, '\\/').replace(/\(/g, '\\(').replace(/\)/g, '\\)').replace(/\%/g, '\\%').replace(/\-/g, '\\-').replace(/\+/g, '\\+').replace(/\*/g, '\\*').replace(/\,/g, '\\,').replace(/\|/g, '\\|')}`
                         // value
                         let name = classSubParams[i].split('>')[0], value = classSubParams[i].split('>')[1]
                         try {
                             if (typeof(value) == 'undefined') {
                                 // value only
-                                styleLightWind.textContent += `.${className.replace(/\:/g, '\\:').replace(/\[/g, '\\[').replace(/\]/g, '\\]').replace(/\>/g, '\\>').replace(/\//g, '\\/').replace(/\(/g, '\\(').replace(/\)/g, '\\)').replace(/\%/g, '\\%').replace(/\-/g, '\\-').replace(/\+/g, '\\+').replace(/\*/g, '\\*').replace(/\,/g, '\\,').replace(/\|/g, '\\|')}{${res.proprieties.valueOnly[name].css}}`
+                                styleLightWind.textContent += `{${res.proprieties.valueOnly[name].css}}`
                             }
                             else {
-                                styleLightWind.textContent += `.${className.replace(/\:/g, '\\:').replace(/\[/g, '\\[').replace(/\]/g, '\\]').replace(/\>/g, '\\>').replace(/\//g, '\\/').replace(/\(/g, '\\(').replace(/\)/g, '\\)').replace(/\%/g, '\\%').replace(/\-/g, '\\-').replace(/\+/g, '\\+').replace(/\*/g, '\\*').replace(/\,/g, '\\,').replace(/\|/g, '\\|')}{${res.proprieties.valueKey[name].propriety}:${value};}`
+                                styleLightWind.textContent += `{${res.proprieties.valueKey[name].propriety}:${value};}`
                             }
                         } catch {
-                            styleLightWind.textContent += `.${className.replace(/\:/g, '\\:').replace(/\[/g, '\\[').replace(/\]/g, '\\]').replace(/\>/g, '\\>').replace(/\//g, '\\/').replace(/\(/g, '\\(').replace(/\)/g, '\\)').replace(/\%/g, '\\%').replace(/\-/g, '\\-').replace(/\+/g, '\\+').replace(/\*/g, '\\*').replace(/\,/g, '\\,').replace(/\|/g, '\\|')}{${name}:${value};}`
+                            styleLightWind.textContent += `{${name}:${value};}`
                         }
 
                         if (screenBreakPointOpen)
@@ -47,15 +42,71 @@
                     }
                     else if (i == 0) {
                         // screen + selector
+                        try {
+                            // screen
+                            if (res.screens[classSubParams[i]].min != null && res.screens[classSubParams[i]].max != null) 
+                                styleLightWind.textContent += `@media screen and (min-width: ${res.screens[classSubParams[i]].min}) and (max-width: ${res.screens[classSubParams[i]].max}) {`
+                            else if (res.screens[classSubParams[i]].min != null) 
+                                styleLightWind.textContent += `@media screen and (min-width: ${res.screens[classSubParams[i]].min}) {`
+                            else if (res.screens[classSubParams[i]].max != null) 
+                                styleLightWind.textContent += `@media screen and (min-width: ${res.screens[classSubParams[i]].max}) {`
+
+                            styleLightWind.textContent += `.${className.replace(/\:/g, '\\:').replace(/\[/g, '\\[').replace(/\]/g, '\\]').replace(/\>/g, '\\>').replace(/\//g, '\\/').replace(/\(/g, '\\(').replace(/\)/g, '\\)').replace(/\%/g, '\\%').replace(/\-/g, '\\-').replace(/\+/g, '\\+').replace(/\*/g, '\\*').replace(/\,/g, '\\,').replace(/\|/g, '\\|')}`
+                            screenBreakPointOpen = true
+                        }
+                        catch {
+                            // selector
+                            styleLightWind.textContent += `.${className.replace(/\:/g, '\\:').replace(/\[/g, '\\[').replace(/\]/g, '\\]').replace(/\>/g, '\\>').replace(/\//g, '\\/').replace(/\(/g, '\\(').replace(/\)/g, '\\)').replace(/\%/g, '\\%').replace(/\-/g, '\\-').replace(/\+/g, '\\+').replace(/\*/g, '\\*').replace(/\,/g, '\\,').replace(/\|/g, '\\|')}`
+                            try {
+                                styleLightWind.textContent += `${res.selectors[classSubParams[i]].selector}`
+                            } catch {}
+                        }
                     }
                     else {
                         // selector
+                        try {
+                            styleLightWind.textContent += `${res.selectors[classSubParams[i]].selector}`
+                        } catch {}
                     }
                 }
             }
 
             // mutations
             (async () => {
+                let res = JSON.parse(`{
+                                        "values": {
+                                            "spacing": { "0": "0px", "px": "1px", "0.5": "0.125rem" }
+                                        },
+                                        "screens": {
+                                            "sm": { "min" : null, "max" : "640px" },
+                                            "md": { "min" : null, "max" : "768px" },
+                                            "lg": { "min" : null, "max" : "1024px" },
+                                            "xl": { "min" : null, "max" : "1280px" },
+                                            "2xl": { "min" : null, "max" : "1536px" }
+                                        },
+                                        "selectors": {
+                                            "active": { "selector": ":active" },
+                                            "act": { "selector": ":active" },
+                                            "checked": { "selector": ":checked" },
+                                            "ckd": { "selector": ":checked" },
+                                            "hover": { "selector": ":hover" },
+                                            "hvr": { "selector": ":hover" }
+                                        },
+                                        "proprieties": {
+                                            "valueOnly": {
+                                                "absolute": { "css": "position:absolute;" },
+                                                "relative": { "css": "position:relative;" },
+                                                "static": { "css": "position:static;" },
+                                                "fixed": { "css": "position:fixed;" },
+                                                "sticky": { "css": "position:sticky;" }
+                                            },
+                                            "valueKey": {
+                                                "padding": { "propriety": "padding", "values": "spacing" },
+                                                "p": { "propriety": "padding", "values": "spacing" }
+                                            }
+                                        }
+                                    }`)
+
                 new MutationObserver(function(mutations) {
                     mutations.forEach(mutation => {
                         try {
@@ -63,7 +114,7 @@
                                 if (typeof(node.classList) != 'undefined') {
                                     node.classList.forEach(elClass => {
                                         if (allClasses.indexOf(elClass) == -1) {
-                                            resolveClass(elClass,res)
+                                            resolveClass(elClass, res)
                                             allClasses.push(elClass)
                                         }
                                     })
@@ -78,7 +129,7 @@
                         mutations.forEach(mutation => {
                             mutation.target.classList.forEach(elClass => {
                                 if (allClasses.indexOf(elClass) == -1) {
-                                    resolveClass(elClass,res)
+                                    resolveClass(elClass, res)
                                     allClasses.push(elClass)
                                 }
                             })
@@ -90,7 +141,7 @@
     </script>
 </head>
 <body>
-    <div class="color>red">
+    <div class="color>red font-size>40pt hvr:font-size>60pt">
         jj
     </div>
 </body>
