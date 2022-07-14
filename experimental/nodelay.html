@@ -73,39 +73,10 @@
 
             // mutations
             (async () => {
-                let res = JSON.parse(`{
-                                        "values": {
-                                            "spacing": { "0": "0px", "px": "1px", "0.5": "0.125rem" }
-                                        },
-                                        "screens": {
-                                            "sm": { "min" : null, "max" : "640px" },
-                                            "md": { "min" : null, "max" : "768px" },
-                                            "lg": { "min" : null, "max" : "1024px" },
-                                            "xl": { "min" : null, "max" : "1280px" },
-                                            "2xl": { "min" : null, "max" : "1536px" }
-                                        },
-                                        "selectors": {
-                                            "active": { "selector": ":active" },
-                                            "act": { "selector": ":active" },
-                                            "checked": { "selector": ":checked" },
-                                            "ckd": { "selector": ":checked" },
-                                            "hover": { "selector": ":hover" },
-                                            "hvr": { "selector": ":hover" }
-                                        },
-                                        "proprieties": {
-                                            "valueOnly": {
-                                                "absolute": { "css": "position:absolute;" },
-                                                "relative": { "css": "position:relative;" },
-                                                "static": { "css": "position:static;" },
-                                                "fixed": { "css": "position:fixed;" },
-                                                "sticky": { "css": "position:sticky;" }
-                                            },
-                                            "valueKey": {
-                                                "padding": { "propriety": "padding", "values": "spacing" },
-                                                "p": { "propriety": "padding", "values": "spacing" }
-                                            }
-                                        }
-                                    }`)
+                var styleHttpReq = new XMLHttpRequest();
+                styleHttpReq.open("GET", document.querySelector('[lightwindsrc]').getAttribute('lightwindsrc'), false);
+                styleHttpReq.send(null);
+                let res = JSON.parse(styleHttpReq.responseText)
 
                 new MutationObserver(function(mutations) {
                     mutations.forEach(mutation => {
@@ -141,7 +112,7 @@
     </script>
 </head>
 <body>
-    <div class="color>red font-size>40pt hvr:font-size>60pt">
+    <div class="color>red font-size>40pt hvr:font-size>60pt absolute">
         jj
     </div>
 </body>
