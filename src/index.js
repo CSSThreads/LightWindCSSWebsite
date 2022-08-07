@@ -2,7 +2,7 @@
     // Init style tag where data = lightwindcss
     let styleLightWind = document.createElement('style');
     styleLightWind.setAttribute('data', 'lightwindcss');
-    styleLightWind.textContent = '.hidden{display:none;}.invisible{visibility:hidden;}'
+    styleLightWind.textContent = ''
     document.head.appendChild(styleLightWind);
 
     let allClasses = [];
