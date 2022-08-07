@@ -1,308 +1,107 @@
-'use strict';
-// to load unofficial theme the user have to download LightWindCSS to local and do changes there in the lightTheme.json
-import lightWindTheme from './lightTheme.json' assert {type: 'json'}
+{
+    // Init style tag where data = lightwindcss
+    let styleLightWind = document.createElement('style');
+    styleLightWind.setAttribute('data', 'lightwindcss');
+    styleLightWind.textContent = '.hidden{display:none;}.invisible{visibility:hidden;}'
+    document.head.appendChild(styleLightWind);
 
-let LightJsClasses, lightWindCssConfig = lightWindTheme.default;
-
-// Init style tag where data = lightwindcss
-let styleLightWind = document.createElement('style');
-styleLightWind.setAttribute('data', 'lightwindcss');
-styleLightWind.textContent = '.hidden{display:none;}.invisible{visibility:hidden;}'
-document.head.appendChild(styleLightWind);
-
-// observing the DOM
-lightObserve(LightJsClasses)
-
-// Getting all classes
-LightJsClasses = getAllClasses()
-
-// create style tag with all the content
-for (let i in LightJsClasses) {
-    let classParams = LightJsClasses[i].split(':');
-
-    let styleStr = ``;
-    let breakPointOpen = false;
-
-    // getting the breakpoint
-
-    for (let k in lightWindCssConfig.breakpoints.screens) {
-        if (lightWindCssConfig.breakpoints.screens[k].name == classParams[0]) {
-            if (lightWindCssConfig.breakpoints.screens[k].min == null) {
-                styleStr += `@media screen and (max-width: ${lightWindCssConfig.breakpoints.screens[k].max}) { `;
-                breakPointOpen = true;
-            }
-            else if (lightWindCssConfig.breakpoints.screens[k].max == null) {
-                styleStr += `@media screen and (min-width: ${lightWindCssConfig.breakpoints.screens[k].min}) { `;
-                breakPointOpen = true;
-            }
-            else {
-                styleStr += `@media screen and (min-width: ${lightWindCssConfig.breakpoints.screens[k].min}) and (max-width: ${lightWindCssConfig.breakpoints.screens[k].max}) {`;
-                breakPointOpen = true;
-            }
-            break;
-        }
-    }
-
-    styleStr += `.${LightJsClasses[i].replace(/\:/g, '\\:').replace(/\[/g, '\\[').replace(/\]/g, '\\]').replace(/\>/g, '\\>').replace(/\//g, '\\/').replace(/\(/g, '\\(').replace(/\)/g, '\\)').replace(/\%/g, '\\%').replace(/\-/g, '\\-').replace(/\+/g, '\\+').replace(/\*/g, '\\*').replace(/\./g, '\\.')}`
-
-    for (let j = 0; j < classParams.length - 1; j++) {
-        // selectors
-        if (breakPointOpen && j == 0)
-            j++;
-        
-        for (let k = 0; k < lightWindCssConfig.selectors[':'].length; k++) {
-            if (lightWindCssConfig.selectors[':'][k].name == classParams[j] || lightWindCssConfig.selectors[':'][k].alias.indexOf(classParams[j]) != -1) {
-                styleStr += `:${lightWindCssConfig.selectors[':'][k].selector}`
-            }
-        }
-        for (let k = 0; k < lightWindCssConfig.selectors['::'].length; k++) {
-            if (lightWindCssConfig.selectors['::'][k].name == classParams[j] || lightWindCssConfig.selectors['::'][k].alias.indexOf(classParams[j]) != -1) {
-                styleStr += `::${lightWindCssConfig.selectors['::'][k].selector}`
-            }
-        }
-    }
-
-    styleStr += "{"
-
-    let isFound = false;
-    for (let k = 0; k < lightWindCssConfig.proprieties.light.length; k++) {
-        if (isFound)
-            break;
-        if (classParams[classParams.length - 1].split('>')[0] == lightWindCssConfig.proprieties.light[k].name) {
-            let value = classParams[classParams.length - 1].split('>')[1]
-            if (value.indexOf('calc(') != -1) {
-                value = value.replace(/\-/g, ' - ').replace(/\+/g, ' + ').replace(/\//g, ' / ').replace(/\*/g, ' * ')
-            }
-
-            for (let l in lightWindCssConfig.proprieties.light[k].values) {
-                if (lightWindCssConfig.proprieties.light[k].values[l].name == value)
-                    value = lightWindCssConfig.proprieties.light[k].values[l].value
-            }
-
-            if (value.startsWith('--')) {
-                value = `var(${value})`
-            }
-
-            lightWindCssConfig.proprieties.light[k].proprieties.forEach(el => {
-                styleStr += `${el}: ${value};`
-            })
-
-            isFound = true;
-        }
-    }
-
-    for (let k = 0; k < lightWindCssConfig.proprieties.global.length; k++) {
-        if (isFound)
-            break;
-        if (lightWindCssConfig.proprieties.global[k]["value-only"]) {
-            if (lightWindCssConfig.proprieties.global[k].values.indexOf(classParams[classParams.length - 1].split('>')[0]) != -1) {
-                styleStr += `${lightWindCssConfig.proprieties.global[k].propriety}: ${classParams[classParams.length - 1].split('>')[0]}`
-                isFound = true;
-            }
-        }
-        else {
-            // with value to resolve
-            try {
-                if (classParams[classParams.length - 1].split('>')[0] == lightWindCssConfig.proprieties.global[k].propriety || lightWindCssConfig.proprieties.global[k].alias.indexOf(classParams[classParams.length - 1].split('>')[0]) != -1) {
-                    let value = classParams[classParams.length - 1].split('>')[1]
-                    if (value.indexOf('calc(') != -1) {
-                        value = value.replace(/\-/g, ' - ').replace(/\+/g, ' + ').replace(/\//g, ' / ').replace(/\*/g, ' * ')
-                    }
-
-                    for (let l in lightWindCssConfig.proprieties.global[k].values) {
-                        if (lightWindCssConfig.proprieties.global[k].values[l].name == value)
-                            value = lightWindCssConfig.proprieties.global[k].values[l].value
-                    }
-
-                    if (value.startsWith('--')) {
-                        value = `var(${value})`
-                    }
-
-                    styleStr += `${lightWindCssConfig.proprieties.global[k].propriety}: ${value}`
-                    isFound = true;
-                }
-            } catch {}
-        }
-    }
-
-    if (!isFound) {
-        let value = classParams[classParams.length - 1].split('>')[1]
-        if (value.indexOf('calc(') != -1) {
-            value = value.replace(/\-/g, ' - ').replace(/\+/g, ' + ').replace(/\//g, ' / ').replace(/\*/g, ' * ')
-        }
-
-        if (value.startsWith('--')) {
-            value = `var(${value})`
-        }
-
-        styleStr += `${classParams[classParams.length - 1].split('>')[0]}: ${value}`;
-    }
-
-    styleStr += ";}"
-    if (breakPointOpen)
-        styleStr += '}'
-
-    styleLightWind.innerText += styleStr
-}
-
-// classes observation functions
-async function lightObserve(classes) {
-    new MutationObserver((mutations) => {
-        for (let i in mutations) {
-            // in case of the element creation
-            mutations[i].addedNodes.forEach(cel => {
-                cel.classList.forEach(el => {
-                    classEvaluate(el, classes)
-                })
-            })
-            // in case of the element class addition
-            mutations[i].target.classList.forEach(el => {
-                classEvaluate(el, classes)
-            })
-        }
-    }).observe(document.querySelector('body'), { attributes: true, subtree: true, childList: true });
-}
-function getAllClasses() {
     let allClasses = [];
-    let allElements = document.querySelectorAll('*');
-    for (let i = 0; i < allElements.length; i++) {
-        allElements[i].classList.value.split(' ').forEach(e => {
-            if (e != '')
-                allClasses.push(e)
-        })
-    }
-    return allClasses;
-}
-async function classEvaluate(el, classes = null) {
-    let styleLightWind = document.head.querySelector("style[data=\"lightwindcss\"]")
 
-    if (classes.indexOf(el) === -1) {
-        classes.push(el)
+    async function resolveClass(className, res) {
+        let classSubParams = className.split(':'), screenBreakPointOpen = false;
 
-        let classParams = el.split(':');
-
-        let styleStr = ``;
-        let breakPointOpen = false;
-
-        // getting the breakpoint
-
-        for (let k in lightWindCssConfig.breakpoints.screens) {
-            if (lightWindCssConfig.breakpoints.screens[k].name == classParams[0]) {
-                if (lightWindCssConfig.breakpoints.screens[k].min == null) {
-                    styleStr += `@media screen and (max-width: ${lightWindCssConfig.breakpoints.screens[k].max}) { `;
-                    breakPointOpen = true;
+        for (i in classSubParams) {
+            if (i == classSubParams.length - 1) {
+                if (i == 0) 
+                    styleLightWind.textContent += `.${className.replace(/\:/g, '\\:').replace(/\[/g, '\\[').replace(/\]/g, '\\]').replace(/\>/g, '\\>').replace(/\//g, '\\/').replace(/\(/g, '\\(').replace(/\)/g, '\\)').replace(/\%/g, '\\%').replace(/\-/g, '\\-').replace(/\+/g, '\\+').replace(/\*/g, '\\*').replace(/\,/g, '\\,').replace(/\|/g, '\\|')}`
+                // value
+                let name = classSubParams[i].split('>')[0], value = classSubParams[i].split('>')[1]
+                try {
+                    if (typeof(value) == 'undefined') {
+                        // value only
+                        styleLightWind.textContent += `{${res.proprieties.valueOnly[name].css}}`
+                    }
+                    else {
+                        try {
+                            styleLightWind.textContent += `{${res.proprieties.valueKey[name].propriety}:${res.values[res.proprieties.valueKey[name].values][value]};}`
+                        }
+                        catch {
+                            styleLightWind.textContent += `{${res.proprieties.valueKey[name].propriety}:${value};}`
+                        }
+                    }
+                } catch {
+                    styleLightWind.textContent += `{${name}:${value};}`
                 }
-                else if (lightWindCssConfig.breakpoints.screens[k].max == null) {
-                    styleStr += `@media screen and (min-width: ${lightWindCssConfig.breakpoints.screens[k].min}) { `;
-                    breakPointOpen = true;
-                }
-                else {
-                    styleStr += `@media screen and (min-width: ${lightWindCssConfig.breakpoints.screens[k].min}) and (max-width: ${lightWindCssConfig.breakpoints.screens[k].max}) {`;
-                    breakPointOpen = true;
-                }
-                break;
+
+                if (screenBreakPointOpen)
+                    styleLightWind.textContent += '}'
             }
-        }
+            else if (i == 0) {
+                // screen + selector
+                try {
+                    // screen
+                    if (res.screens[classSubParams[i]].min != null && res.screens[classSubParams[i]].max != null) 
+                        styleLightWind.textContent += `@media screen and (min-width: ${res.screens[classSubParams[i]].min}) and (max-width: ${res.screens[classSubParams[i]].max}) {`
+                    else if (res.screens[classSubParams[i]].min != null) 
+                        styleLightWind.textContent += `@media screen and (min-width: ${res.screens[classSubParams[i]].min}) {`
+                    else if (res.screens[classSubParams[i]].max != null) 
+                        styleLightWind.textContent += `@media screen and (min-width: ${res.screens[classSubParams[i]].max}) {`
 
-        styleStr += `.${el.replace(/\:/g, '\\:').replace(/\[/g, '\\[').replace(/\]/g, '\\]').replace(/\>/g, '\\>').replace(/\//g, '\\/').replace(/\(/g, '\\(').replace(/\)/g, '\\)').replace(/\%/g, '\\%').replace(/\-/g, '\\-').replace(/\+/g, '\\+').replace(/\*/g, '\\*').replace(/\./g, '\\.')}`
-
-        for (let j = 0; j < classParams.length - 1; j++) {
-            // selectors
-            if (breakPointOpen && j == 0)
-                j++;
-            
-            for (let k = 0; k < lightWindCssConfig.selectors[':'].length; k++) {
-                if (lightWindCssConfig.selectors[':'][k].name == classParams[j] || lightWindCssConfig.selectors[':'][k].alias.indexOf(classParams[j]) != -1) {
-                    styleStr += `:${lightWindCssConfig.selectors[':'][k].selector}`
+                    styleLightWind.textContent += `.${className.replace(/\:/g, '\\:').replace(/\[/g, '\\[').replace(/\]/g, '\\]').replace(/\>/g, '\\>').replace(/\//g, '\\/').replace(/\(/g, '\\(').replace(/\)/g, '\\)').replace(/\%/g, '\\%').replace(/\-/g, '\\-').replace(/\+/g, '\\+').replace(/\*/g, '\\*').replace(/\,/g, '\\,').replace(/\|/g, '\\|')}`
+                    screenBreakPointOpen = true
                 }
-            }
-            for (let k = 0; k < lightWindCssConfig.selectors['::'].length; k++) {
-                if (lightWindCssConfig.selectors['::'][k].name == classParams[j] || lightWindCssConfig.selectors['::'][k].alias.indexOf(classParams[j]) != -1) {
-                    styleStr += `::${lightWindCssConfig.selectors['::'][k].selector}`
-                }
-            }
-        }
-
-        styleStr += "{"
-
-        let isFound = false;
-        for (let k = 0; k < lightWindCssConfig.proprieties.light.length; k++) {
-            if (isFound)
-                break;
-            if (classParams[classParams.length - 1].split('>')[0] == lightWindCssConfig.proprieties.light[k].name) {
-                let value = classParams[classParams.length - 1].split('>')[1]
-                if (value.indexOf('calc(') != -1) {
-                    value = value.replace(/\-/g, ' - ').replace(/\+/g, ' + ').replace(/\//g, ' / ').replace(/\*/g, ' * ')
-                }
-
-                for (let l in lightWindCssConfig.proprieties.light[k].values) {
-                    if (lightWindCssConfig.proprieties.light[k].values[l].name == value)
-                        value = lightWindCssConfig.proprieties.light[k].values[l].value
-                }
-
-                if (value.startsWith('--')) {
-                    value = `var(${value})`
-                }
-
-                lightWindCssConfig.proprieties.light[k].proprieties.forEach(el => {
-                    styleStr += `${el}: ${value};`
-                })
-
-                isFound = true;
-            }
-        }
-
-        for (let k = 0; k < lightWindCssConfig.proprieties.global.length; k++) {
-            if (isFound)
-                break;
-            if (lightWindCssConfig.proprieties.global[k]["value-only"]) {
-                if (lightWindCssConfig.proprieties.global[k].values.indexOf(classParams[classParams.length - 1].split('>')[0]) != -1) {
-                    styleStr += `${lightWindCssConfig.proprieties.global[k].propriety}: ${classParams[classParams.length - 1].split('>')[0]}`
-                    isFound = true;
+                catch {
+                    // selector
+                    styleLightWind.textContent += `.${className.replace(/\:/g, '\\:').replace(/\[/g, '\\[').replace(/\]/g, '\\]').replace(/\>/g, '\\>').replace(/\//g, '\\/').replace(/\(/g, '\\(').replace(/\)/g, '\\)').replace(/\%/g, '\\%').replace(/\-/g, '\\-').replace(/\+/g, '\\+').replace(/\*/g, '\\*').replace(/\,/g, '\\,').replace(/\|/g, '\\|')}`
+                    try {
+                        styleLightWind.textContent += `${res.selectors[classSubParams[i]].selector}`
+                    } catch {}
                 }
             }
             else {
-                // with value to resolve
+                // selector
                 try {
-                    if (classParams[classParams.length - 1].split('>')[0] == lightWindCssConfig.proprieties.global[k].propriety || lightWindCssConfig.proprieties.global[k].alias.indexOf(classParams[classParams.length - 1].split('>')[0]) != -1) {
-                        let value = classParams[classParams.length - 1].split('>')[1]
-                        if (value.indexOf('calc(') != -1) {
-                            value = value.replace(/\-/g, ' - ').replace(/\+/g, ' + ').replace(/\//g, ' / ').replace(/\*/g, ' * ')
-                        }
-    
-                        for (let l in lightWindCssConfig.proprieties.global[k].values) {
-                            if (lightWindCssConfig.proprieties.global[k].values[l].name == value)
-                                value = lightWindCssConfig.proprieties.global[k].values[l].value
-                        }
-    
-                        if (value.startsWith('--')) {
-                            value = `var(${value})`
-                        }
-    
-                        styleStr += `${lightWindCssConfig.proprieties.global[k].propriety}: ${value}`
-                        isFound = true;
-                    }
+                    styleLightWind.textContent += `${res.selectors[classSubParams[i]].selector}`
                 } catch {}
             }
         }
-
-        if (!isFound) {
-            let value = classParams[classParams.length - 1].split('>')[1]
-            if (value.indexOf('calc(') != -1) {
-                value = value.replace(/\-/g, ' - ').replace(/\+/g, ' + ').replace(/\//g, ' / ').replace(/\*/g, ' * ')
-            }
-
-            if (value.startsWith('--')) {
-                value = `var(${value})`
-            }
-
-            styleStr += `${classParams[classParams.length - 1].split('>')[0]}: ${value}`;
-        }
-
-        styleStr += ";}"
-        if (breakPointOpen)
-            styleStr += '}'
-
-        styleLightWind.innerText += styleStr
     }
+
+    // mutations
+    (async () => {
+        var styleHttpReq = new XMLHttpRequest();
+        styleHttpReq.open("GET", document.querySelector('[lightwindsrc]').getAttribute('lightwindsrc'), false);
+        styleHttpReq.send(null);
+        let res = JSON.parse(styleHttpReq.responseText)
+
+        new MutationObserver(function(mutations) {
+            mutations.forEach(mutation => {
+                try {
+                    mutation.addedNodes.forEach(node => {
+                        if (typeof(node.classList) != 'undefined') {
+                            node.classList.forEach(elClass => {
+                                if (allClasses.indexOf(elClass) == -1) {
+                                    resolveClass(elClass, res)
+                                    allClasses.push(elClass)
+                                }
+                            })
+                        }
+                    })
+                } catch {}
+            })
+        }).observe(document, { subtree: true, childList: true });
+
+        new MutationObserver(function(mutations) {
+            try {
+                mutations.forEach(mutation => {
+                    mutation.target.classList.forEach(elClass => {
+                        if (allClasses.indexOf(elClass) == -1) {
+                            resolveClass(elClass, res)
+                            allClasses.push(elClass)
+                        }
+                    })
+                })
+            } catch {}
+        }).observe(document, { attributes: true, attributeFilter: ["class"], subtree: true });
+    })()
 }
