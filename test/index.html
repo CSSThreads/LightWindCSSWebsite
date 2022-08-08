@@ -11,7 +11,7 @@
             // Init style tag where data = lightwindcss
             let styleLightWind = document.createElement('style');
             styleLightWind.setAttribute('data', 'lightwindcss');
-            styleLightWind.textContent = '.hidden{display:none;}.invisible{visibility:hidden;}'
+            styleLightWind.textContent = ''
             document.head.appendChild(styleLightWind);
 
             let allClasses = [];
@@ -26,20 +26,29 @@
                         // value
                         let name = classSubParams[i].split('>')[0], value = classSubParams[i].split('>')[1]
                         try {
+                            styleLightWind.textContent += `{`
                             if (typeof(value) == 'undefined') {
                                 // value only
-                                styleLightWind.textContent += `{${res.proprieties.valueOnly[name].css}}`
+                                styleLightWind.textContent += `${res.proprieties.valueOnly[name].css}}`
                             }
                             else {
-                                try {
-                                    styleLightWind.textContent += `{${res.proprieties.valueKey[name].propriety}:${res.values[res.proprieties.valueKey[name].values][value]};}`
+                                try {                                    
+                                    res.proprieties.valueKey[name].propriety.forEach(prop => {
+                                        styleLightWind.textContent += `${prop}:${res.values[res.proprieties.valueKey[name].values][value]};`
+                                    });
+                                
+                                    styleLightWind.textContent += `}`
                                 }
-                                catch {
-                                    styleLightWind.textContent += `{${res.proprieties.valueKey[name].propriety}:${value};}`
+                                catch {                                    
+                                    res.proprieties.valueKey[name].propriety.forEach(prop => {
+                                        styleLightWind.textContent += `${prop}:${value};`
+                                    });
+                                
+                                    styleLightWind.textContent += `}`
                                 }
                             }
                         } catch {
-                            styleLightWind.textContent += `{${name}:${value};}`
+                            styleLightWind.textContent += `${name}:${value};}`
                         }
 
                         if (screenBreakPointOpen)
@@ -117,7 +126,7 @@
     </script>
 </head>
 <body>
-    <div class="color>red font-size>40pt hvr:font-size>60pt absolute p>px">
+    <div class="absolute color>red font-size>40pt hvr:font-size>60pt absolute p>px">
         some text
     </div>
 </body>
