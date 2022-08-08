@@ -17,20 +17,29 @@
                 // value
                 let name = classSubParams[i].split('>')[0], value = classSubParams[i].split('>')[1]
                 try {
+                    styleLightWind.textContent += `{`
                     if (typeof(value) == 'undefined') {
                         // value only
-                        styleLightWind.textContent += `{${res.proprieties.valueOnly[name].css}}`
+                        styleLightWind.textContent += `${res.proprieties.valueOnly[name].css}}`
                     }
                     else {
-                        try {
-                            styleLightWind.textContent += `{${res.proprieties.valueKey[name].propriety}:${res.values[res.proprieties.valueKey[name].values][value]};}`
+                        try {                                    
+                            res.proprieties.valueKey[name].propriety.forEach(prop => {
+                                styleLightWind.textContent += `${prop}:${res.values[res.proprieties.valueKey[name].values][value]};`
+                            });
+
+                            styleLightWind.textContent += `}`
                         }
-                        catch {
-                            styleLightWind.textContent += `{${res.proprieties.valueKey[name].propriety}:${value};}`
+                        catch {                                    
+                            res.proprieties.valueKey[name].propriety.forEach(prop => {
+                                styleLightWind.textContent += `${prop}:${value};`
+                            });
+
+                            styleLightWind.textContent += `}`
                         }
                     }
                 } catch {
-                    styleLightWind.textContent += `{${name}:${value};}`
+                    styleLightWind.textContent += `${name}:${value};}`
                 }
 
                 if (screenBreakPointOpen)
