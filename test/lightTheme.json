@@ -66,19 +66,19 @@
             "box-content": { "css": "box-sizing:content-box;" }
         },
         "valueKey": {
-            "aspect": { "propriety": "aspect-ratio", "values": "ratio" },
-            "columns": { "propriety": "columns", "values": "grid" },
-            "col": { "propriety": "columns", "values": "grid" },
-            "padding": { "propriety": "padding", "values": "spacing" },
-            "p": { "propriety": "padding", "values": "spacing" },
-            "margin": { "propriety": "margin", "values": "spacing" },
-            "m": { "propriety": "margin", "values": "spacing" },
-            "width": { "propriety": "width", "values": "spacing" },
-            "w": { "propriety": "width", "values": "spacing" },
-            "height": { "propriety": "height", "values": "spacing" },
-            "h": { "propriety": "height", "values": "spacing" },
-            "top": { "propriety": "top", "values": "spacing" },
-            "t": { "propriety": "top", "values": "spacing" }
+            "aspect": { "propriety": ["aspect-ratio"], "values": "ratio" },
+            "columns": { "propriety": ["columns"], "values": "grid" },
+            "col": { "propriety": ["columns"], "values": "grid" },
+            "padding": { "propriety": ["padding"], "values": "spacing" },
+            "p": { "propriety": ["padding"], "values": "spacing" },
+            "margin": { "propriety": ["margin"], "values": "spacing" },
+            "m": { "propriety": ["margin"], "values": "spacing" },
+            "width": { "propriety": ["width"], "values": "spacing" },
+            "w": { "propriety": ["width"], "values": "spacing" },
+            "height": { "propriety": ["height"], "values": "spacing" },
+            "h": { "propriety": ["height"], "values": "spacing" },
+            "top": { "propriety": ["top"], "values": "spacing" },
+            "t": { "propriety": ["top"], "values": "spacing" }
         }
     }
 }
