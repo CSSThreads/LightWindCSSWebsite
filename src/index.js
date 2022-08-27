@@ -8,12 +8,16 @@
     let allClasses = [];
 
     async function resolveClass(className, res) {
-        let classSubParams = className.split(':'), screenBreakPointOpen = false;
+        let classSubParams = className.split(':'), screenBreakPointOpen = false, dark = '';
+        if (className.startsWith('dark')) {
+            dark = 'html[dark] ';
+            classSubParams.shift();
+        }
 
         for (i in classSubParams) {
             if (i == classSubParams.length - 1) {
                 if (i == 0) 
-                    styleLightWind.textContent += `.${className.replace(/\:/g, '\\:').replace(/\[/g, '\\[').replace(/\]/g, '\\]').replace(/\>/g, '\\>').replace(/\//g, '\\/').replace(/\(/g, '\\(').replace(/\)/g, '\\)').replace(/\%/g, '\\%').replace(/\-/g, '\\-').replace(/\+/g, '\\+').replace(/\*/g, '\\*').replace(/\,/g, '\\,').replace(/\|/g, '\\|')}`
+                    styleLightWind.textContent += `${dark}.${className.replace(/\:/g, '\\:').replace(/\[/g, '\\[').replace(/\]/g, '\\]').replace(/\>/g, '\\>').replace(/\//g, '\\/').replace(/\(/g, '\\(').replace(/\)/g, '\\)').replace(/\%/g, '\\%').replace(/\-/g, '\\-').replace(/\+/g, '\\+').replace(/\*/g, '\\*').replace(/\,/g, '\\,').replace(/\|/g, '\\|')}`
                 // value
                 let name = classSubParams[i].split('>')[0], value = classSubParams[i].split('>')[1]
                 try {
@@ -25,7 +29,10 @@
                     else {
                         try {                                    
                             res.proprieties.valueKey[name].propriety.forEach(prop => {
-                                styleLightWind.textContent += `${prop}:${res.values[res.proprieties.valueKey[name].values][value]};`
+                                if (dark == '')
+                                    styleLightWind.textContent += `${prop}:${res.values[res.proprieties.valueKey[name].valuesDefault][value]};`
+                                else
+                                    styleLightWind.textContent += `${prop}:${res.values[res.proprieties.valueKey[name].valuesDark][value]};`
                             });
 
                             styleLightWind.textContent += `}`
@@ -56,12 +63,12 @@
                     else if (res.screens[classSubParams[i]].max != null) 
                         styleLightWind.textContent += `@media screen and (min-width: ${res.screens[classSubParams[i]].max}) {`
 
-                    styleLightWind.textContent += `.${className.replace(/\:/g, '\\:').replace(/\[/g, '\\[').replace(/\]/g, '\\]').replace(/\>/g, '\\>').replace(/\//g, '\\/').replace(/\(/g, '\\(').replace(/\)/g, '\\)').replace(/\%/g, '\\%').replace(/\-/g, '\\-').replace(/\+/g, '\\+').replace(/\*/g, '\\*').replace(/\,/g, '\\,').replace(/\|/g, '\\|')}`
+                    styleLightWind.textContent += `${dark}.${className.replace(/\:/g, '\\:').replace(/\[/g, '\\[').replace(/\]/g, '\\]').replace(/\>/g, '\\>').replace(/\//g, '\\/').replace(/\(/g, '\\(').replace(/\)/g, '\\)').replace(/\%/g, '\\%').replace(/\-/g, '\\-').replace(/\+/g, '\\+').replace(/\*/g, '\\*').replace(/\,/g, '\\,').replace(/\|/g, '\\|')}`
                     screenBreakPointOpen = true
                 }
                 catch {
                     // selector
-                    styleLightWind.textContent += `.${className.replace(/\:/g, '\\:').replace(/\[/g, '\\[').replace(/\]/g, '\\]').replace(/\>/g, '\\>').replace(/\//g, '\\/').replace(/\(/g, '\\(').replace(/\)/g, '\\)').replace(/\%/g, '\\%').replace(/\-/g, '\\-').replace(/\+/g, '\\+').replace(/\*/g, '\\*').replace(/\,/g, '\\,').replace(/\|/g, '\\|')}`
+                    styleLightWind.textContent += `${dark}.${className.replace(/\:/g, '\\:').replace(/\[/g, '\\[').replace(/\]/g, '\\]').replace(/\>/g, '\\>').replace(/\//g, '\\/').replace(/\(/g, '\\(').replace(/\)/g, '\\)').replace(/\%/g, '\\%').replace(/\-/g, '\\-').replace(/\+/g, '\\+').replace(/\*/g, '\\*').replace(/\,/g, '\\,').replace(/\|/g, '\\|')}`
                     try {
                         styleLightWind.textContent += `${res.selectors[classSubParams[i]].selector}`
                     } catch {}
