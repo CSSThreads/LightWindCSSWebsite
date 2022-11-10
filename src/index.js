@@ -17,7 +17,7 @@
         for (i in classSubParams) {
             if (i == classSubParams.length - 1) {
                 if (i == 0) 
-                    styleLightWind.textContent += `${dark}.${className.replace(/\#/g, '\\#').replace(/\:/g, '\\:').replace(/\[/g, '\\[').replace(/\]/g, '\\]').replace(/\>/g, '\\>').replace(/\//g, '\\/').replace(/\(/g, '\\(').replace(/\)/g, '\\)').replace(/\%/g, '\\%').replace(/\-/g, '\\-').replace(/\+/g, '\\+').replace(/\*/g, '\\*').replace(/\,/g, '\\,').replace(/\|/g, '\\|')}`
+                    styleLightWind.textContent += `${dark}.${className.replace(/\./g, '\\.').replace(/\#/g, '\\#').replace(/\:/g, '\\:').replace(/\[/g, '\\[').replace(/\]/g, '\\]').replace(/\>/g, '\\>').replace(/\//g, '\\/').replace(/\(/g, '\\(').replace(/\)/g, '\\)').replace(/\%/g, '\\%').replace(/\-/g, '\\-').replace(/\+/g, '\\+').replace(/\*/g, '\\*').replace(/\,/g, '\\,').replace(/\|/g, '\\|')}`
                 // value
                 let name = classSubParams[i].split('>')[0], value = classSubParams[i].split('>')[1]
                 try {
@@ -39,14 +39,14 @@
                         }
                         catch {                                    
                             res.proprieties.valueKey[name].propriety.forEach(prop => {
-                                styleLightWind.textContent += `${prop}:${value};`
+                                styleLightWind.textContent += `${prop}:${value.replace(/\_/g, ' ')};`
                             });
 
                             styleLightWind.textContent += `}`
                         }
                     }
                 } catch {
-                    styleLightWind.textContent += `${name}:${value};}`
+                    styleLightWind.textContent += `${name}:${value.replace(/\_/g, ' ')};}`
                 }
 
                 if (screenBreakPointOpen)
@@ -63,12 +63,12 @@
                     else if (res.screens[classSubParams[i]].max != null) 
                         styleLightWind.textContent += `@media screen and (min-width: ${res.screens[classSubParams[i]].max}) {`
 
-                    styleLightWind.textContent += `${dark}.${className.replace(/\#/g, '\\#').replace(/\:/g, '\\:').replace(/\[/g, '\\[').replace(/\]/g, '\\]').replace(/\>/g, '\\>').replace(/\//g, '\\/').replace(/\(/g, '\\(').replace(/\)/g, '\\)').replace(/\%/g, '\\%').replace(/\-/g, '\\-').replace(/\+/g, '\\+').replace(/\*/g, '\\*').replace(/\,/g, '\\,').replace(/\|/g, '\\|')}`
+                    styleLightWind.textContent += `${dark}.${className.replace(/\./g, '\\.').replace(/\#/g, '\\#').replace(/\:/g, '\\:').replace(/\[/g, '\\[').replace(/\]/g, '\\]').replace(/\>/g, '\\>').replace(/\//g, '\\/').replace(/\(/g, '\\(').replace(/\)/g, '\\)').replace(/\%/g, '\\%').replace(/\-/g, '\\-').replace(/\+/g, '\\+').replace(/\*/g, '\\*').replace(/\,/g, '\\,').replace(/\|/g, '\\|')}`
                     screenBreakPointOpen = true
                 }
                 catch {
                     // selector
-                    styleLightWind.textContent += `${dark}.${className.replace(/\#/g, '\\#').replace(/\:/g, '\\:').replace(/\[/g, '\\[').replace(/\]/g, '\\]').replace(/\>/g, '\\>').replace(/\//g, '\\/').replace(/\(/g, '\\(').replace(/\)/g, '\\)').replace(/\%/g, '\\%').replace(/\-/g, '\\-').replace(/\+/g, '\\+').replace(/\*/g, '\\*').replace(/\,/g, '\\,').replace(/\|/g, '\\|')}`
+                    styleLightWind.textContent += `${dark}.${className.replace(/\./g, '\\.').replace(/\#/g, '\\#').replace(/\:/g, '\\:').replace(/\[/g, '\\[').replace(/\]/g, '\\]').replace(/\>/g, '\\>').replace(/\//g, '\\/').replace(/\(/g, '\\(').replace(/\)/g, '\\)').replace(/\%/g, '\\%').replace(/\-/g, '\\-').replace(/\+/g, '\\+').replace(/\*/g, '\\*').replace(/\,/g, '\\,').replace(/\|/g, '\\|')}`
                     try {
                         styleLightWind.textContent += `${res.selectors[classSubParams[i]].selector}`
                     } catch {}
