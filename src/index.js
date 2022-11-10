@@ -1,7 +1,7 @@
 {
     // Init style tag where data = lightwindcss
     let styleLightWind = document.createElement('style');
-    styleLightWind.setAttribute('data', 'lightwindcss');
+    styleLightWind.setAttribute('data', 'lightwindsrc');
     styleLightWind.textContent = ''
     document.head.appendChild(styleLightWind);
 
