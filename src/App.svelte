@@ -3,7 +3,9 @@
 
   let scrollTop = 0;
   let top = -80;
-  let content = ''
+  let content = `<h1 class="font-size>60px"> Hello </h1> 
+
+<b class="color>red mr>20px font-size>40px hvr:color>blue cursor>none transition>0.5s"> Welcome! </b>  In the LIghtWindCSS <i class="color>green font-size>20px hover:font-size>25px transition>0.5s cursor>pointer"> documentation </i> here you will be able to learn new things.`
   let lines = content.split('\n')
 
   function Update() {
@@ -112,10 +114,10 @@ ${newl.join(' ')}
       </div>
 
       <h2 id="h2-Playground" class="cursor>pointer"><a href="{window.location.href.split('#')[0]}#h2-Playground">Playground</a></h2>
-      <p>Test LightWindCSS here! Change the classes with the next syntax: <b><i>(screen-selector:)(selector:)</i>&#60;value-only|key>value></b></p>
+      <p>Test LightWindCSS here! Use the classes as explained in the <a href="/documentation">documentation</a>. On the left side write your Html and use the class propriety to add your style classes. The result will be rendered on the right side.
       <div id="demoBox" class="counter-reset>i grid gap>20px grid-template-columns>1fr_1fr p>20px background>#422271 w>calc(100%_-_65px) h>700px border-radius>20px">
         <div class="overflow>auto relative w>100%">
-          <textarea spellcheck="false" id="editor" class="pl>51px white-space>normal resize>none absolute z-index>10 w>calc(100%_-_65px) resize>none opacity>1 color>transparent background>transparent outline>none border>none caret-color>white text-align>left" bind:value={content} on:input={() => { Update() }} on:keydown={UpdateHeight}></textarea>
+          <textarea spellcheck="false" id="editor" class="pl>51px white-space>normal resize>none absolute z-index>10 w>calc(100%_-_65px) resize>none opacity>1 color>transparent background>transparent outline>none border>none caret-color>white text-align>left" style="min-height: 200px;" bind:value={content} on:input={() => { Update() }} on:keydown={UpdateHeight}></textarea>
           <div id="template" class="absolute mt>3px white-space>normal ml>3px w>calc(100%_-_15px)">
           </div>
         </div>
