@@ -68,8 +68,8 @@
             }
           }
         }
-        document.querySelector('#template').innerHTML += `<div class="min-height>38px mb>-19px w>100% relative grid grid-template-columns>50px_1fr"><span class="counter">${i + 1}</span><div class="w>calc(100%_-_20px)">
-          <pre class="align>right" style="max-width: ${document.querySelector('textarea').offsetWidth - 51}px">
+        document.querySelector('#template').innerHTML += `<div class="min-height>38px mb>-19px w>100% relative grid grid-template-columns>50px_1fr"><span class="counter">${i + 1}</span><div class="w>calc(100%_-_0px)">
+          <pre class="align>right" style="max-width: ${document.querySelector('textarea').offsetWidth - 53}px">
 ${newl.join(' ')}
           </pre>
         </div></div>`
@@ -91,7 +91,7 @@ ${newl.join(' ')}
     }
     async function UpdateSize() {
       for (let el of document.querySelectorAll('pre')) {
-        el.style.maxWidth = `${document.querySelector('textarea').offsetWidth - 51}px`
+        el.style.maxWidth = `${document.querySelector('textarea').offsetWidth - 53}px`
       }
       UpdateHeight();
     }
